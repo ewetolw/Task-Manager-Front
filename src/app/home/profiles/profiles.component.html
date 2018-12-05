@@ -1,0 +1,58 @@
+<div class="content">
+ <h4>Find user</h4>
+
+<div>
+
+  <form class="form-inline" #searchForm="ngForm" (ngSubmit)="takeUserBy(searchForm)" novalidate>
+    <div class="row">
+    <div class="form-group mb-2">
+      <label> Search for: </label>
+      <input class="form-control" id="data" [placeholder]="'...'" name="data" ngModel>
+    </div>
+    <span class="form-group mb-2 inline">
+      <select name="option" id="options" class="form-control form-control-sm" ngModel>
+        <option  *ngFor="let option of options">{{option.value}}</option>
+      </select>
+    </span>
+    <button type="submit" class="btn mb-2"> Search </button>
+    </div>
+  </form>
+  <button class = "btn" display="'inline-block'" (click)="takeAllUsers()">Download all</button>
+</div>
+
+
+
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">ID</th>
+        <th scope="col">Username</th>
+        <th scope="col">Last name</th>
+        <th scope="col">First name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Activated</th>
+        <th scope="col">Role</th>
+        <th scope="col"> </th>
+      </tr>
+    </thead>
+    <tbody *ngIf="usersData">
+      <tr *ngFor="let user of usersData; let i = index">
+        <th scope="row">{{i+1}}</th>
+        <td>{{user.id}}</td>
+        <td>{{user.username}}</td>
+        <td>{{user.lastName}}</td>
+        <td>{{user.firstName}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.activated}}</td>
+        <td>{{user.role}}</td>
+        <td><button class = "btn btn-info" display="'inline-block'">Update</button></td>
+        <td><button class = "btn btn-warning" display="'inline-block'" (click)="deleteUser(user.id)">Delete</button></td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="error">{{error}}</div>
+  <div *ngIf="information">{{information}}</div>
+
+
+</div>

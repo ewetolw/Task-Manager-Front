@@ -1,0 +1,21 @@
+<div [align]="'center'">
+    <h4>Login</h4>
+<form #f="ngForm" (ngSubmit)="login(f)" novalidate>
+    <div>
+        <input  type="text" name="username" ngModel>
+      </div>
+      <div>
+          <label for="input">Username</label>
+      </div>
+      <div>
+        <input  type="password" name="password" ngModel>
+      </div>
+      <div>
+        <label for="input">Password</label>
+      </div>
+      <button class="btn">LogIn</button>
+      <div>{{error}}</div>
+  </form>
+</div>
+
+
