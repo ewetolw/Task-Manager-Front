@@ -22,6 +22,18 @@ export class AuthService {
     return this.httpService.get<AuthData>('http://localhost:8080/user');
 }
 
+
+loginReserve (username: string, password: string): Observable<AuthData> {
+  this.token = 'Basic ' + btoa(username + ':' + password);
+  // const headers = new HttpHeaders({
+  //   authorization : 'Basic ' + btoa(username + ':' + password)
+  // });
+
+  return this.httpService.get<AuthData>('http://localhost:9000/user');
+}
+
+
+
   getToken() {
     return this.token;
   }

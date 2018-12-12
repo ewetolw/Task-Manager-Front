@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
     private authGuard: AuthenticationGuard) {}
 
   ngOnInit() {
+    sessionStorage.setItem('role','');
   }
 
   login(formData: NgForm) {
@@ -45,7 +46,7 @@ export class LoginComponent implements OnInit {
       if (error.status === 401) { // error path
       this.error = 'Bad Credentials';
       } else {
-      this.error = 'Internal error';
+      this.loginReserve(formData.value.username, formData.value.password)
             }
       });
 
@@ -54,9 +55,38 @@ export class LoginComponent implements OnInit {
   }
 
 
-  logout() {
+
+
+  loginReserve(username: string,  password: string) {
+
+    this.authService.loginReserve(username, password).subscribe(
+    (
+      (response: AuthData) => {
+        if (response['authorities']) {
+          let role = response.authorities[0].authority.toString();
+          console.log(response);
+          this.authService.setUsername(username);
+          sessionStorage.setItem('role', role);
+            if (role === 'ADMIN') {
+              this.error = 'Admin panel is unavailabe';
+            } else if (role === 'MANAGER') {
+              this.router.navigateByUrl('/manager');
+            } else if (role === 'WORKER') {
+              this.router.navigateByUrl('/worker');
+            }
+        }
+       }),
+      error => {
+      if (error.status === 401) { // error path
+      this.error = 'Bad Credentials';
+      } else {
+      this.error = 'Application is unavailable';
+            }
+      });
 
   }
+
+
 
 }
 

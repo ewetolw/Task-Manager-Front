@@ -1,0 +1,35 @@
+<div class="content">
+<h4>Report new problem </h4>
+
+<div class="row">
+
+
+  <div class="col">
+      <form #newProblemForm="ngForm" (ngSubmit)="addProblem(newProblemForm)">
+      <div class="containter" style="width:50%;" >
+          <div class="row">
+              <div class="col-sm">
+                  <label for="formGroupExampleInput">Client:</label><br>
+                  <input type="text" class="form-control-sm" id="client" name="client" ngModel required >
+              </div>
+            </div>
+            <div class= "row">
+              <div class="col-sm">
+                <label for="comment">Reported Problem:</label>
+                <textarea class="form-control" rows="5" id="content" name="content" required ngModel></textarea>
+              </div>
+            </div>
+
+      </div>
+      <div class="row">
+      <div class="col-sm">
+          <br>
+      <button class="btn" [disabled]="newProblemForm.invalid" >Report problem</button><p>{{response}}</p>
+      </div>
+      </div>
+      </form>
+</div>
+
+
+
+</div>

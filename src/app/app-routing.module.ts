@@ -4,6 +4,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './auth/login/login.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { ManagerHomeComponent } from './manager-home/manager-home.component';
 
 
 const routes: Routes = [
@@ -23,12 +24,8 @@ const routes: Routes = [
   },
   {
     path: 'manager',
-    component: HomeComponent,
+    component: ManagerHomeComponent,
     canActivate: [AuthenticationGuard]
-  },
-  {
-    path: 'profiles',
-    component: ProfilesComponent
   },
   { path: '**', redirectTo: 'login' }
 ];

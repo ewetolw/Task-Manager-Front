@@ -1,0 +1,289 @@
+<div class="content">
+  <h4>Find problem</h4>
+
+ <div>
+
+   <form class="form-inline" #searchForm="ngForm" (ngSubmit)="takeProblemBy(searchForm)" novalidate>
+     <div class="row">
+     <div class="form-group mb-2">
+       <label> Search for: </label>
+       <input  class="form-control" id="data" [placeholder]="'...'" name="data" ngModel>
+     </div>
+     <span class="form-group mb-2 inline">
+       <select name="option" id="options"  data-live-search="true" class="form-control form-control-sm" ngModel>
+         <option  *ngFor="let option of options" >{{option.value}}</option>
+       </select>
+     </span>
+     <button type="submit" class="btn mb-2"> Search </button>
+     </div>
+   </form>
+   <button class = "btn" display="'inline-block'" (click)="takeAllProblems()">Download all</button>
+ </div>
+
+
+
+ <table class="table table-hover">
+     <thead>
+       <tr>
+         <th scope="col">#</th>
+         <th scope="col">ID</th>
+         <th scope="col">Client</th>
+         <th scope="col">Content</th>
+         <th scope="col">Open Date</th>
+         <th scope="col">Status</th>
+         <th scope="col">Date of change</th>
+         <th scope="col"></th>
+         <th scope="col"></th>
+         <th scope="col"></th>
+       </tr>
+     </thead>
+     <tbody *ngFor="let problem of problemsData; let i = index">
+       <tr >
+         <th scope="row">{{i+1}}</th>
+         <td>{{problem.id}}</td>
+         <td>{{problem.client}}</td>
+         <td>{{problem.content}}</td>
+         <td>{{problem.openDate | date:'short'}}</td>
+         <td>{{problem.status}}</td>
+         <td>{{problem.changeStatusDate | date:'short'}}</td>
+         <td><button class = "btn btn-warning" display="'inline-block'" data-toggle="modal"  data-target="#taskModal" (click)="seeProblem(problem)">Tasks</button></td>
+         <td *ngIf="problem.status !== 'FINISHED'"><button class = "btn btn-primary" display="'inline-block'" data-toggle="modal"  data-target="#UpdateProblemModal" (click)="seeProblem(problem)">Update</button></td>
+         <td *ngIf="problem.status !== 'FINISHED'" ><button class = "btn btn-danger" display="'inline-block'" (click)="deleteProblem(problem)">Delete</button></td>
+        </tr>
+
+     </tbody>
+   </table>
+   <div *ngIf="error">{{error}}</div>
+   <div *ngIf="information">{{information}}</div>
+
+
+
+
+ </div>
+
+
+
+ <div class="modal fade bd-example-modal-lg" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Problem</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf=checkedProblem>
+            <p>Open date: {{checkedProblem.openDate | date:'short'}}</p>
+            <p>Client:    {{checkedProblem.client}}</p>
+            <p>Content:   {{checkedProblem.content}}</p>
+            <h5>Tasks:</h5>
+
+
+            <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Task</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Open Date</th>
+                    <th scope="col">Date of change</th>
+                    <th scope="col">Feedback</th>
+                    <th scope="col">Contracotr</th>
+                    <th scope="col">Contact</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let pTask of checkedProblem.tasksList; let i = index">
+                  <tr >
+                    <th scope="row">{{i+1}}</th>
+                    <td>{{pTask.id}}</td>
+                    <td>{{pTask.taskContent}}</td>
+                    <td>{{pTask.status}}</td>
+                    <td>{{pTask.openDate | date:'short'}}</td>
+                    <td>{{pTask.changeStatusDate | date:'short'}}</td>
+                    <td>{{pTask.feedback}}</td>
+                    <td *ngIf="pTask.contractorId; else elseBlock">{{pTask.contractorId.id}}/ {{pTask.contractorId.lastName}} {{pTask.contractorId.firstName}}</td>
+                    <td *ngIf="pTask.contractorId; else elseBlock">{{pTask.contractorId.email}}</td>
+                    <ng-template #elseBlock><td></td></ng-template>
+                    <td *ngIf="checkedProblem && checkedProblem.status !== 'FINISHED'"><button class = "btn btn-warning" display="'inline-block'" (click)="deleteTask(pTask)">Delete</button></td>
+                    <td *ngIf="checkedProblem && checkedProblem.status !== 'FINISHED'"><button class = "btn btn-primary" display="'inline-block'" data-toggle="modal"  data-target="#UpdateTaskModal"  (click)="seeTask(pTask); getWorkers()">Update</button></td>
+                  </tr>
+                </tbody>
+              </table>
+
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <span *ngIf="checkedProblem && checkedProblem.status !== 'FINISHED'">
+          <button class = "btn btn-primary" display="'inline-block'" data-toggle="modal"  data-target="#AddTaskModal" (click)="getWorkers()">Add Task</button>
+          </span>
+          <span *ngIf="checkedProblem && checkedProblem.status !== 'FINISHED'">
+          <button class = "btn btn-primary" (click)="updateStatus()">Finish Problem</button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <div class="modal fade bd-example-modal" id="AddTaskModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Update Task</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clearResponse()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div>
+
+                <div class="col">
+                    <form #newTaskForm="ngForm" (ngSubmit)="addTask(newTaskForm)">
+                        <div class="containter" style="width:50%;" >
+                            <div class="row">
+                                <div class="col-sm">
+                                    <label for="worker">Worker:</label>
+                                    <select  name="worker" id="workers" class="form-control form-control-sm" ngModel>
+                                       <option></option>
+                                       <option  *ngFor="let worker of workers">id:{{worker.id}}/ {{worker.lastName}} {{worker.firstName}}</option>
+                                    </select>
+                                </div>
+                              </div>
+                              <div class= "row">
+                                <div class="col-sm">
+                                  <label for="comment">Task:</label>
+                                  <textarea class="form-control" rows="5" id="task" name="task" required ngModel></textarea>
+                                </div>
+                              </div>
+
+                        </div>
+                        <div class="row">
+                        <div class="col-sm">
+                            <br>
+                        <button class="btn" [disabled]="newTaskForm.invalid" >Add Task</button>
+                        <div *ngIf="response">{{response}}</div>
+                        </div>
+                        </div>
+                      </form>
+                  </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="clearResponse()" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="modal fade bd-example-modal" id="UpdateTaskModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Update Task</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clearResponse()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div>
+                  <div class="col">
+                      <form #newTaskForm="ngForm" (ngSubmit)="updateTask(newTaskForm)">
+                          <div class="containter" style="width:50%;" >
+                              <div class="row">
+                                  <div class="col-sm">
+                                      <label for="worker">Worker:</label>
+                                      <select name="worker" id="workers" class="form-control form-control-sm" ngModel>
+                                         <option></option>
+                                         <option  *ngFor="let worker of workers">id:{{worker.id}}/ {{worker.lastName}} {{worker.firstName}}</option>
+                                      </select>
+                                  </div>
+                                </div>
+                                <div class= "row">
+                                  <div class="col-sm" *ngIf="checkedTask">
+                                    <label for="comment">Task:</label>
+                                    <textarea [value]="checkedTask.taskContent" class="form-control" rows="5" id="task" name="task" required ngModel></textarea>
+                                  </div>
+                                </div>
+
+                          </div>
+                          <div class="row">
+                          <div class="col-sm">
+                              <br>
+                          <button class="btn" [disabled]="newTaskForm.invalid" >Update Task</button>
+                          <div *ngIf="response">{{response}}</div>
+                          </div>
+                          </div>
+                        </form>
+                    </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="clearResponse()" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+    <div class="modal fade bd-example-modal" id="UpdateProblemModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Update Problem</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clearResponse()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div>
+                  <div class="col">
+                      <div class="row">
+                          <div class="col">
+                              <form #updateProblemForm="ngForm" (ngSubmit)="updateProblem(updateProblemForm)">
+                              <div class="containter" *ngIf="checkedProblem">
+                                  <div class="row" >
+                                      <div class="col-sm">
+                                          <label for="formGroupExampleInput">Client:</label><br>
+                                          <input type="text" class="form-control-sm" id="client" [(ngModel)]="checkedProblem.client" name="client" ngModel required>
+                                      </div>
+                                    </div>
+                                    <div class= "row" >
+                                      <div class="col-sm">
+                                        <label for="comment">Reported Problem:</label>
+                                        <textarea class="form-control" rows="5" id="content" name="content" [(ngModel)]="checkedProblem.content" required ngModel></textarea>
+                                      </div>
+                                    </div>
+
+                              </div>
+                              <div class="row">
+                              <div class="col-sm">
+                                  <br>
+                              <button class="btn" [disabled]="updateProblemForm.invalid">Update problem</button><p>{{response}}</p>
+                              </div>
+                              </div>
+                              </form>
+                        </div>
+                    </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="clearResponse()" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+

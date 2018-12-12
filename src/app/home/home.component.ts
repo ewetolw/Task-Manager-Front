@@ -1,6 +1,7 @@
 import { AuthService } from './../auth/auth.service';
 import { AuthenticationGuard } from './../auth/AuthenticationGuard';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -15,7 +16,8 @@ export class HomeComponent implements OnInit {
   loadDeleteUser = false;
   username: string;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService,
+    private router: Router) {
     this.username = this.authService.username;
   }
 
@@ -44,5 +46,13 @@ export class HomeComponent implements OnInit {
   this.loadUpadteUser = false;
   this.loadDeleteUser = false;
   }
+
+
+  logout() {
+    this.authService.token = '';
+    this.authService.username = '';
+    this.router.navigateByUrl('/login');
+  }
+
 
 }
