@@ -109,7 +109,7 @@
                     <td *ngIf="pTask.contractorId; else elseBlock">{{pTask.contractorId.email}}</td>
                     <ng-template #elseBlock><td></td></ng-template>
                     <td *ngIf="checkedProblem && checkedProblem.status !== 'FINISHED'"><button class = "btn btn-warning" display="'inline-block'" (click)="deleteTask(pTask)">Delete</button></td>
-                    <td *ngIf="checkedProblem && checkedProblem.status !== 'FINISHED'"><button class = "btn btn-primary" display="'inline-block'" data-toggle="modal"  data-target="#UpdateTaskModal"  (click)="seeTask(pTask); getWorkers()">Update</button></td>
+                    <td *ngIf="checkedProblem && checkedProblem.status !== 'FINISHED'"><button class = "btn btn-primary" display="'inline-block'" data-toggle="modal"  data-target="#UpdateTaskModal"  (click)="getWorkers(); seeTask(pTask); ">Update</button></td>
                   </tr>
                 </tbody>
               </table>
@@ -137,7 +137,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Update Task</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Add Task</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="clearResponse()">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -198,8 +198,12 @@
             <div class="modal-body">
               <div>
                   <div class="col">
-                      <form #newTaskForm="ngForm" (ngSubmit)="updateTask(newTaskForm)">
-                          <div class="containter" style="width:50%;" >
+                      <form #updateTaskForm="ngForm" (ngSubmit)="updateTask(updateTaskForm)">
+                          <div class="containter" >
+                            <div class="row" *ngIf="checkedTask">
+                              <p>Current Contractor: id:{{checkedTask.contractorId.id}}/{{checkedTask.contractorId.lastName}} {{checkedTask.contractorId.firstName}}</p>
+                              <p>Current Task: {{checkedTask.taskContent}}</p>
+                            </div>
                               <div class="row">
                                   <div class="col-sm">
                                       <label for="worker">Worker:</label>
@@ -212,7 +216,7 @@
                                 <div class= "row">
                                   <div class="col-sm" *ngIf="checkedTask">
                                     <label for="comment">Task:</label>
-                                    <textarea [value]="checkedTask.taskContent" class="form-control" rows="5" id="task" name="task" required ngModel></textarea>
+                                    <textarea class="form-control" rows="5" id="updatetask" name="updatetask" required ngModel></textarea>
                                   </div>
                                 </div>
 
@@ -220,7 +224,7 @@
                           <div class="row">
                           <div class="col-sm">
                               <br>
-                          <button class="btn" [disabled]="newTaskForm.invalid" >Update Task</button>
+                          <button class="btn" [disabled]="updateTaskForm.invalid" >Update Task</button>
                           <div *ngIf="response">{{response}}</div>
                           </div>
                           </div>
@@ -250,6 +254,10 @@
             <div class="modal-body">
               <div>
                   <div class="col">
+                    <div class="row" *ngIf="checkedProblem">
+                        <p>Client: {{checkedProblem.client}}</p>
+                        <p>Reported problem: {{checkedProblem.content}}</p>
+                    </div>
                       <div class="row">
                           <div class="col">
                               <form #updateProblemForm="ngForm" (ngSubmit)="updateProblem(updateProblemForm)">
@@ -257,13 +265,13 @@
                                   <div class="row" >
                                       <div class="col-sm">
                                           <label for="formGroupExampleInput">Client:</label><br>
-                                          <input type="text" class="form-control-sm" id="client" [(ngModel)]="checkedProblem.client" name="client" ngModel required>
+                                          <input type="text" class="form-control-sm" id="client" name="client" ngModel required>
                                       </div>
                                     </div>
                                     <div class= "row" >
                                       <div class="col-sm">
                                         <label for="comment">Reported Problem:</label>
-                                        <textarea class="form-control" rows="5" id="content" name="content" [(ngModel)]="checkedProblem.content" required ngModel></textarea>
+                                        <textarea class="form-control" rows="5" id="content" name="content" required ngModel></textarea>
                                       </div>
                                     </div>
 

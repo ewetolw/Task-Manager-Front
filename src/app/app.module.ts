@@ -17,6 +17,7 @@ import { NewProfilesComponent } from './home/new-profiles/new-profiles/new-profi
 import { ManagerHomeComponent } from './manager-home/manager-home.component';
 import { ProblemsComponent } from './manager-home/problems/problems.component';
 import { NewProblemsComponent } from './manager-home/new-problems/new-problems.component';
+import { UnassignedProblemsComponent } from './manager-home/unassigned-problems/unassigned-problems.component';
 
 
 
@@ -29,7 +30,8 @@ import { NewProblemsComponent } from './manager-home/new-problems/new-problems.c
     NewProfilesComponent,
     ManagerHomeComponent,
     ProblemsComponent,
-    NewProblemsComponent
+    NewProblemsComponent,
+    UnassignedProblemsComponent
   ],
   imports: [
     BrowserModule,
