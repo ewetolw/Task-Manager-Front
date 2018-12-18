@@ -14,10 +14,7 @@ export class ManagerHomeComponent implements OnInit {
   loadHome = true;
   loadFindProblem = false;
   loadAddProblem = false;
-  loadFindTask = false;
-  loadAddTask = false;
-  loadUnasignedProblem = false;
-  loadUnasignedTask = false;
+  loadUnassignedProblem = false;
 
 
 
@@ -46,6 +43,11 @@ export class ManagerHomeComponent implements OnInit {
     this.loadAddProblem = true;
   }
 
+  loadUnassignedProblemComponent() {
+    this.cleanComponent();
+    this.loadUnassignedProblem = true;
+  }
+
 
   logout() {
     this.authService.token = '';
@@ -58,9 +60,6 @@ export class ManagerHomeComponent implements OnInit {
     this.loadHome = false;
     this.loadFindProblem = false;
     this.loadAddProblem = false;
-    this.loadFindTask = false;
-    this.loadAddTask = false;
-    this.loadUnasignedProblem = false;
-    this.loadUnasignedTask = false;
+    this.loadUnassignedProblem = false;
     }
 }

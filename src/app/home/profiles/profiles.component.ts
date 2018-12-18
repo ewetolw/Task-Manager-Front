@@ -1,6 +1,8 @@
+import { UserData } from 'src/app/home/profiles/profiles.component';
 import { Component, OnInit } from '@angular/core';
 import { AdminReqService } from '../admin-req.service';
 import { NgForm } from '@angular/forms';
+import { User } from '../new-profiles/new-profiles/models/User';
 
 @Component({
   selector: 'app-profiles',
@@ -18,17 +20,30 @@ export class ProfilesComponent implements OnInit {
 
   ];
 
+  roles = [
+    { name: 'WORKER', value: 'WORKER' },
+    { name: 'MANAGER', value: 'MANAGER'},
+    { name: 'ADMIN', value: 'ADMIN'}
+    ];
+
   usersData: Array<UserData>;
   error;
   information;
-
+  response;
+  checkedUser: UserData;
 
   constructor(private adminReq: AdminReqService) { }
 
   ngOnInit() {
   }
 
+  clear() {
+    this.error = '';
+    this.information = '';
+  }
+
   takeAllUsers() {
+    this.clear();
     console.log('take all users');
     this.adminReq.takeAllUsers().subscribe(
       (response: Array<UserData>) => {
@@ -45,8 +60,12 @@ export class ProfilesComponent implements OnInit {
     ); }
 
     takeUserBy(formData: NgForm) {
+    this.clear();
     console.log(formData.value.data, formData.value.option);
+
+    // tslint:disable-next-line:prefer-const
     let option =  formData.value.option;
+    // tslint:disable-next-line:prefer-const
     let data = formData.value.data;
      console.log('take user by ' + option + ' data: ' + data);
      if (option && data) {
@@ -74,7 +93,6 @@ export class ProfilesComponent implements OnInit {
 
 
   deleteUser(id: number) {
-    console.log('delete user with id' + id);
     this.adminReq.deleteUser(id).subscribe(
 
       (result: boolean) => {
@@ -83,6 +101,38 @@ export class ProfilesComponent implements OnInit {
         }
         }
         );
+    }
+
+
+
+    updateUser(formData: NgForm) {
+          // tslint:disable-next-line:prefer-const
+          let user = new User();
+          user.parseForm2User(formData);
+          user.id = this.checkedUser.id;
+          user.role=this.checkedUser.role;
+          // tslint:disable-next-line:prefer-const
+          let data = JSON.stringify(user);
+          console.log(data);
+          this.adminReq.updateUser(data).subscribe(
+            (res: Response) => {
+              this.response = 'Updated user';
+              let i = this.usersData.findIndex(d => d.id === this.checkedUser.id);
+              this.usersData[i] = user;
+            }, error => {
+              if (error.status === 400) {
+                  this.response = 'Change user data';
+              } else {
+                this.response = 'Internal error';
+              }
+
+            }
+          );
+    }
+
+    seeUser(checkedUser: UserData) {
+      this.response='';
+      this.checkedUser = JSON.parse(JSON.stringify(checkedUser));
     }
 
   }

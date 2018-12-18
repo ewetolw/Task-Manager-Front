@@ -26,4 +26,8 @@ export class AdminReqService {
   return this.httpService.post<any>('http://localhost:8080/admin/addUser/', data);
 }
 
+  updateUser (data: string) {
+  return this.httpService.put<any>('http://localhost:8080/admin/updateUserData/', data);
+}
+
 }

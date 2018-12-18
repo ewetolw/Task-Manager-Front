@@ -39,6 +39,10 @@ export class ProblemsComponent implements OnInit {
 
   }
 
+  clear() {
+    this.error = '';
+    this.information = '';
+  }
 
   getWorkers() {
     this.managerReq.getWorkers().subscribe(
@@ -56,17 +60,19 @@ export class ProblemsComponent implements OnInit {
 }
 
   seeProblem(problem: ProblemData) {
-    this.checkedProblem = problem;
+    this.response = '';
+    this.checkedProblem = JSON.parse(JSON.stringify(problem));
   }
 
   seeTask(task: TaskData) {
-    this.checkedTask = task;
+    this.response = '';
+    this.checkedTask = JSON.parse(JSON.stringify(task));
   }
 
   updateProblem(formData: NgForm) {
     // tslint:disable-next-line:prefer-const
     let problem = new Problem();
-    problem.parseForm2Problem(formData);
+    problem.content = formData.value.content;
     problem.id = this.checkedProblem.id;
     // tslint:disable-next-line:prefer-const
     let data = JSON.stringify(problem);
@@ -76,9 +82,9 @@ export class ProblemsComponent implements OnInit {
         this.response = 'Problem updated';
         this.managerReq.takeProblemBy('id' , this.checkedProblem.id.toString()).subscribe(
           (newData: Array<ProblemData>) => {
-            let p = this.problemsData.indexOf(this.checkedProblem);
-            this.checkedProblem = newData[0];
-            this.problemsData[p.toString()] = this.checkedProblem;
+            let p = this.problemsData.find(d => d.id === this.checkedProblem.id );
+            let i = this.problemsData.indexOf(p);
+            this.problemsData[i.toString()] = newData[0];
             this.error = null;
           }, error => {
               if (error.status === 401) {
@@ -115,9 +121,10 @@ export class ProblemsComponent implements OnInit {
         this.response = response.successful;
         this.managerReq.takeProblemBy('id' , this.checkedProblem.id.toString()).subscribe(
           (newData: Array<ProblemData>) => {
-            let p = this.problemsData.indexOf(this.checkedProblem);
+            let p = this.problemsData.find(d => d.id === this.checkedProblem.id );
+            let i = this.problemsData.indexOf(p);
             this.checkedProblem = newData[0];
-            this.problemsData[p.toString()] = this.checkedProblem;
+            this.problemsData[i.toString()] = this.checkedProblem;
             this.error = null;
           }, error => {
               if (error.status === 401) {
@@ -140,10 +147,14 @@ export class ProblemsComponent implements OnInit {
   }
 
   takeAllProblems() {
+    this.clear();
     console.log('take all problems');
     this.managerReq.takeAllProblems().subscribe(
       (response: Array<ProblemData>) => {
         console.log(response);
+        if (response.length === 0) {
+          this.error = 'No result';
+        }
         this.problemsData = response;
        }, error => {
           if (error.status === 401) {
@@ -163,6 +174,7 @@ export class ProblemsComponent implements OnInit {
 
 
   takeProblemBy(formData: NgForm) {
+    this.clear();
     console.log(formData.value.data, formData.value.option);
     let option =  formData.value.option;
     // tslint:disable-next-line:prefer-const
@@ -208,7 +220,8 @@ export class ProblemsComponent implements OnInit {
         this.response = response.successful;
         this.managerReq.takeProblemBy('id' , this.checkedProblem.id.toString()).subscribe(
           (newData: Array<ProblemData>) => {
-            let p = this.problemsData.indexOf(this.checkedProblem);
+            let i = this.problemsData.find(data => data.id === this.checkedProblem.id);
+            let p = this.problemsData.indexOf(i);
             this.checkedProblem = newData[0];
             this.problemsData[p.toString()] = this.checkedProblem;
             this.error = null;
@@ -242,10 +255,10 @@ export class ProblemsComponent implements OnInit {
         problem.status = 'FINISHED';
         this.managerReq.changeProblemStatus(problem).subscribe(
           (response: ResultInfo) => {
-            console.log('wywołuje się');
             this.managerReq.takeProblemBy('id' , this.checkedProblem.id.toString()).subscribe(
               (newData: Array<ProblemData>) => {
-                let p = this.problemsData.indexOf(this.checkedProblem);
+                let i = this.problemsData.find(data => data.id === this.checkedProblem.id);
+                let p = this.problemsData.indexOf(i);
                 this.checkedProblem = newData[0];
                 this.problemsData[p.toString()] = this.checkedProblem;
                 this.error = null;
@@ -280,7 +293,11 @@ export class ProblemsComponent implements OnInit {
 
       this.managerReq.deleteTask(task.id.toString()).subscribe(
         (response: ResultInfo) => {
-          this.checkedProblem.tasksList = this.checkedProblem.tasksList.filter(data => data.id !== task.id );
+
+          let p = this.problemsData.find(data => data.id === this.checkedProblem.id);
+          this.checkedProblem.tasksList = p.tasksList.filter(d => d.id !== task.id);
+          let i = this.problemsData.indexOf(p);
+          this.problemsData[i.toString()] = this.checkedProblem;
 
         }, error => {
             if (error.status === 401) {
@@ -299,7 +316,7 @@ export class ProblemsComponent implements OnInit {
 export interface ProblemData {
   id: number;
   content: string;
-  client: string;
+  client: Client;
   status: string;
   openDate: Date;
   changeStatusDate: Date;
@@ -327,4 +344,9 @@ export interface ContractorData {
 export interface ResultInfo {
   successful: string;
   error: string;
+}
+
+export interface Client {
+  id: number;
+  client: string;
 }

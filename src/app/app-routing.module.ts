@@ -5,6 +5,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ManagerHomeComponent } from './manager-home/manager-home.component';
+import { WorkerHomeComponent } from './worker-home/worker-home.component';
 
 
 const routes: Routes = [
@@ -19,7 +20,7 @@ const routes: Routes = [
   },
   {
     path: 'worker',
-    component: HomeComponent,
+    component: WorkerHomeComponent,
     canActivate: [AuthenticationGuard]
   },
   {

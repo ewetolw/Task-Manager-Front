@@ -17,8 +17,9 @@ export class NewProfilesComponent implements OnInit {
     ];
 
     response: string;
-
-
+    username='';
+    password;
+    confirmPassword;
 
   constructor(private adminReq: AdminReqService) { }
 

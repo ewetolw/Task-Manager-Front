@@ -41,7 +41,7 @@
        <tr >
          <th scope="row">{{i+1}}</th>
          <td>{{problem.id}}</td>
-         <td>{{problem.client}}</td>
+         <td>{{problem.client.client}}</td>
          <td>{{problem.content}}</td>
          <td>{{problem.openDate | date:'short'}}</td>
          <td>{{problem.status}}</td>
@@ -75,7 +75,7 @@
         <div class="modal-body">
           <div *ngIf=checkedProblem>
             <p>Open date: {{checkedProblem.openDate | date:'short'}}</p>
-            <p>Client:    {{checkedProblem.client}}</p>
+            <p>Client:    {{checkedProblem.client.client}}</p>
             <p>Content:   {{checkedProblem.content}}</p>
             <h5>Tasks:</h5>
 
@@ -202,12 +202,11 @@
                           <div class="containter" >
                             <div class="row" *ngIf="checkedTask">
                               <p>Current Contractor: id:{{checkedTask.contractorId.id}}/{{checkedTask.contractorId.lastName}} {{checkedTask.contractorId.firstName}}</p>
-                              <p>Current Task: {{checkedTask.taskContent}}</p>
                             </div>
                               <div class="row">
                                   <div class="col-sm">
                                       <label for="worker">Worker:</label>
-                                      <select name="worker" id="workers" class="form-control form-control-sm" ngModel>
+                                      <select name="worker" id="workers" class="form-control form-control-sm" ngModel required>
                                          <option></option>
                                          <option  *ngFor="let worker of workers">id:{{worker.id}}/ {{worker.lastName}} {{worker.firstName}}</option>
                                       </select>
@@ -216,7 +215,7 @@
                                 <div class= "row">
                                   <div class="col-sm" *ngIf="checkedTask">
                                     <label for="comment">Task:</label>
-                                    <textarea class="form-control" rows="5" id="updatetask" name="updatetask" required ngModel></textarea>
+                                    <textarea class="form-control" rows="5" id="updatetask" name="updatetask" [(ngModel)]="checkedTask.taskContent" required ngModel></textarea>
                                   </div>
                                 </div>
 
@@ -251,27 +250,25 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" *ngIf="checkedProblem">
+              <div class="containter">
+              </div>
               <div>
                   <div class="col">
-                    <div class="row" *ngIf="checkedProblem">
-                        <p>Client: {{checkedProblem.client}}</p>
-                        <p>Reported problem: {{checkedProblem.content}}</p>
-                    </div>
                       <div class="row">
                           <div class="col">
                               <form #updateProblemForm="ngForm" (ngSubmit)="updateProblem(updateProblemForm)">
-                              <div class="containter" *ngIf="checkedProblem">
-                                  <div class="row" >
+                              <div class="containter">
+                                  <div class="row" *ngIf="checkedProblem">
                                       <div class="col-sm">
-                                          <label for="formGroupExampleInput">Client:</label><br>
-                                          <input type="text" class="form-control-sm" id="client" name="client" ngModel required>
+                                          <label for="formGroupExampleInput">Client:</label><p>{{checkedProblem.client.client}}</p><br>
+                                          <!-- <input type="text" class="form-control-sm" id="client" [(ngModel)]="checkedProblem.client.client" name="client" ngModel required> -->
                                       </div>
                                     </div>
                                     <div class= "row" >
                                       <div class="col-sm">
                                         <label for="comment">Reported Problem:</label>
-                                        <textarea class="form-control" rows="5" id="content" name="content" required ngModel></textarea>
+                                        <textarea class="form-control" rows="5" id="content" name="content" [(ngModel)]="checkedProblem.content" required ngModel></textarea>
                                       </div>
                                     </div>
 

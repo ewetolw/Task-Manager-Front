@@ -18,7 +18,9 @@ import { ManagerHomeComponent } from './manager-home/manager-home.component';
 import { ProblemsComponent } from './manager-home/problems/problems.component';
 import { NewProblemsComponent } from './manager-home/new-problems/new-problems.component';
 import { UnassignedProblemsComponent } from './manager-home/unassigned-problems/unassigned-problems.component';
-
+import { ConfirmValidatorDirective } from './home/new-profiles/new-profiles/confirm-validator.directive';
+import { WorkerHomeComponent } from './worker-home/worker-home.component';
+import { CurrentTaskComponent } from './worker-home/current-task/current-task.component';
 
 
 @NgModule({
@@ -31,7 +33,10 @@ import { UnassignedProblemsComponent } from './manager-home/unassigned-problems/
     ManagerHomeComponent,
     ProblemsComponent,
     NewProblemsComponent,
-    UnassignedProblemsComponent
+    UnassignedProblemsComponent,
+    ConfirmValidatorDirective,
+    WorkerHomeComponent,
+    CurrentTaskComponent
   ],
   imports: [
     BrowserModule,

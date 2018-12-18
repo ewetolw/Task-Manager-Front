@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 
 
 export class User {
-
+    id: number;
     username: string;
     role: string;
     lastName: string;
@@ -27,8 +27,10 @@ export class User {
     this.firstName = formData.value.firstname;
     this.lastName = formData.value.lastname;
     this.email = formData.value.email;
+    if ( formData.value.password !== '' ) {
     this.password = formData.value.password;
     this.role = formData.value.role;
+    }
 }
 
 

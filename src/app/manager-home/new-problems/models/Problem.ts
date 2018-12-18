@@ -1,10 +1,11 @@
 import { NgForm } from '@angular/forms';
+import { Client } from './Client';
 
 
 
 export class Problem {
     id: number;
-    client: string;
+    client: Client;
     content: string;
     status: string;
 
@@ -13,12 +14,14 @@ export class Problem {
     this.client = client;
     this.content = content;
     this.status = status;
-
   }
 
 
   parseForm2Problem(formData: NgForm) {
-    this.client = formData.value.client;
+    const c = new Client();
+    c.client = formData.value.client;
+    c.client = c.client.toUpperCase();
+    this.client = c;
     this.content = formData.value.content;
 }
 
