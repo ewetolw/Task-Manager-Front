@@ -63,6 +63,7 @@ export class LoginComponent implements OnInit {
     (
       (response: AuthData) => {
         if (response['authorities']) {
+          // tslint:disable-next-line:prefer-const
           let role = response.authorities[0].authority.toString();
           console.log(response);
           this.authService.setUsername(username);

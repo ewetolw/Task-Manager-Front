@@ -13,13 +13,18 @@ export class AuthService {
   role: string;
   token: string;
   username: string;
+
+  addres: string = 'localhost';
+  port1: string = '9045';
+
+
   login (username: string, password: string): Observable<AuthData> {
     this.token = 'Basic ' + btoa(username + ':' + password);
     // const headers = new HttpHeaders({
     //   authorization : 'Basic ' + btoa(username + ':' + password)
     // });
 
-    return this.httpService.get<AuthData>('http://localhost:8080/user');
+    return this.httpService.get<AuthData>('http://'+ this.addres + ':' + this.port1+'/log1/user');
 }
 
 
@@ -29,7 +34,7 @@ loginReserve (username: string, password: string): Observable<AuthData> {
   //   authorization : 'Basic ' + btoa(username + ':' + password)
   // });
 
-  return this.httpService.get<AuthData>('http://localhost:9000/user');
+  return this.httpService.get<AuthData>('http://'+ this.addres + ':' + this.port1+'/log2/user');
 }
 
 

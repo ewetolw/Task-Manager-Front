@@ -11,59 +11,62 @@ import { UserData } from '../home/profiles/profiles.component';
 })
 export class ManagerReqService {
 
+  addres: string = 'localhost';
+  port: string = '9045';
+
   constructor(private  httpService: HttpClient) { }
 
 
   takeAllProblems (): Observable<Array<ProblemData>> {
-    return this.httpService.get<Array<ProblemData>>('http://localhost:9000/manager/problems');
+    return this.httpService.get<Array<ProblemData>>('http://'+ this.addres + ':' + this.port+'/manager/problems');
 }
 
 takeAllUnassigendProblems (): Observable<Array<ProblemData>> {
-  return this.httpService.get<Array<ProblemData>>('http://localhost:9000/manager/problem/noManager');
+  return this.httpService.get<Array<ProblemData>>('http://'+ this.addres + ':' + this.port+'/manager/problem/noManager');
 }
 
 
 takeProblemBy (option: string, data: string): Observable<Array<ProblemData>> {
-  return this.httpService.get<Array<ProblemData>>('http://localhost:9000/manager/problem/' + option + '/' + data);
+  return this.httpService.get<Array<ProblemData>>('http://'+ this.addres + ':' + this.port+'/manager/problem/' + option + '/' + data);
 }
 
 
 addProblem (data: string) {
-  return this.httpService.post<any>('http://localhost:9000/manager/problem/', data);
+  return this.httpService.post<any>('http://'+ this.addres + ':' + this.port+'/manager/problem/', data);
 }
 
 updateProblem (data: string) {
-  return this.httpService.put<any>('http://localhost:9000/manager/problem/', data);
+  return this.httpService.put<any>('http://'+ this.addres + ':' + this.port+'/manager/problem/', data);
 }
 
 
 getWorkers (): Observable<Array<UserData>> {
-  return this.httpService.get<any>('http://localhost:9000/manager/workers/');
+  return this.httpService.get<any>('http://'+ this.addres + ':' + this.port+'/manager/workers/');
 }
 
 
 addTask (problemId: string, workerId: string, task: Task) {
-  return this.httpService.post<any>('http://localhost:9000/manager/task/' + problemId + '/' + workerId, task);
+  return this.httpService.post<any>('http://'+ this.addres + ':' + this.port+'/manager/task/' + problemId + '/' + workerId, task);
 }
 
 updateTask (workerId: string, task: Task) {
-  return this.httpService.put<any>('http://localhost:9000/manager/taskContent/' + workerId, task);
+  return this.httpService.put<any>('http://'+ this.addres + ':' + this.port+'/manager/taskContent/' + workerId, task);
 }
 
 deleteTask (taskId: string) {
-  return this.httpService.delete<any>('http://localhost:9000/manager/task/' + taskId);
+  return this.httpService.delete<any>('http://'+ this.addres + ':' + this.port+'/manager/task/' + taskId);
 }
 
 changeProblemStatus (problem: Problem) {
-  return this.httpService.post<any>('http://localhost:9000/manager/problemStatus/', problem);
+  return this.httpService.post<any>('http://'+ this.addres + ':' + this.port+'/manager/problemStatus/', problem);
 }
 
 deleteProblem(problemId: string) {
-  return this.httpService.delete<any>('http://localhost:9000/manager/problem/' + problemId);
+  return this.httpService.delete<any>('http://'+ this.addres + ':' + this.port+'/manager/problem/' + problemId);
 }
 
 takeOverProblem(id: string) {
-  return this.httpService.post<any>('http://localhost:9000/manager/problemWithoutManager/' + id, {});
+  return this.httpService.post<any>('http://'+ this.addres + ':' + this.port+'/manager/problemWithoutManager/' + id, {});
 }
 
 }
